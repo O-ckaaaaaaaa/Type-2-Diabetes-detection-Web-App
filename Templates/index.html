@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diabetes Prediction</title>
+    <script defer src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<style>
+    :root {
+        --primary-color: #4285F4;
+        --secondary-color: #34A853;
+        --danger-color: #EA4335;
+        --warning-color: #FBBC05;
+        --light-gray: #f5f7fa;
+        --dark-gray: #2d3748;
+        --medium-gray: #718096;
+    }
+
+    body {
+        font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f8fafc;
+        color: var(--dark-gray);
+        line-height: 1.6;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+
+    .container {
+        max-width: 600px;
+        width: 90%;
+        margin: 2rem auto;
+        padding: 2rem;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    h1 {
+        color: var(--primary-color);
+        text-align: center;
+        margin-bottom: 1.5rem;
+        font-weight: 600;
+    }
+
+    h2 {
+        color: var(--dark-gray);
+        font-size: 1.25rem;
+        margin-top: 0;
+        margin-bottom: 1rem;
+        font-weight: 500;
+    }
+
+    form {
+        margin-bottom: 2rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.25rem;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        color: var(--medium-gray);
+    }
+
+    input {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: border-color 0.3s ease;
+    }
+
+    input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.1);
+    }
+
+    .btn {
+        background-color: var(--primary-color);
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: center;
+        display: block;
+        width: 100%;
+    }
+
+    .btn:hover {
+        background-color: #3367d6;
+        transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+        background-color: white;
+        color: var(--primary-color);
+        border: 1px solid var(--primary-color);
+    }
+
+    .btn-secondary:hover {
+        background-color: #f0f7ff;
+    }
+
+    .card {
+        background: white;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        border-left: 4px solid var(--primary-color);
+    }
+
+    .prediction-result {
+        margin-top: 1rem;
+        padding: 1rem;
+        border-radius: 8px;
+        background-color: var(--light-gray);
+    }
+
+    .high-risk {
+        background-color: #FFEBEE;
+        border-left: 4px solid var(--danger-color);
+    }
+
+    .low-risk {
+        background-color: #E8F5E9;
+        border-left: 4px solid var(--secondary-color);
+    }
+
+    .risk-label {
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.875rem;
+        letter-spacing: 0.05em;
+    }
+
+    .high-risk .risk-label {
+        color: var(--danger-color);
+    }
+
+    .low-risk .risk-label {
+        color: var(--secondary-color);
+    }
+
+    .probability {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin: 0.5rem 0;
+    }
+
+    hr {
+        border: none;
+        height: 1px;
+        background-color: #e2e8f0;
+        margin: 1.5rem 0;
+    }
+
+    .logout-btn {
+        background: none;
+        border: none;
+        color: var(--medium-gray);
+        cursor: pointer;
+        font-size: 0.875rem;
+        margin-top: 2rem;
+        text-align: center;
+        width: 100%;
+    }
+
+    .logout-btn:hover {
+        color: var(--danger-color);
+        text-decoration: underline;
+    }
+
+    .feature-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    @media (max-width: 768px) {
+        .container {
+            padding: 1.5rem;
+            width: 95%;
+        }
+
+        .feature-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+<body>
+<div class="container">
+    <h1>Diabetes Prediction System</h1>
+    <!-- Prediction Form -->
+    <form id="predictForm">
+        <label>Pregnancies:</label> <input type="number" id="pregnancies"><br>
+        <label>Glucose:</label> <input type="number" id="glucose" required><br>
+        <label>Blood Pressure:</label> <input type="number" id="bloodPressure" required><br>
+        <label>Skin Thickness:</label> <input type="number" id="skinThickness" required><br>
+        <label>Insulin:</label> <input type="number" id="insulin" required><br>
+        <label>BMI:</label> <input type="number" step="0.1" id="bmi" required><br>
+        <label>Diabetes Pedigree Function:</label> <input type="number" step="0.01" id="dpf" required><br>
+        <label>Age:</label> <input type="number" id="age" required><br>
+        <button type="submit" class="btn">Predict</button>
+    </form>
+    <hr>
+    <!-- Latest Prediction Display -->
+    <div class="latest">
+        {% if latest_prediction %}
+            <h2>Latest Prediction</h2>
+            <p><strong>Glucose:</strong> {{ latest_prediction.glucose }}</p>
+            <p><strong>BMI:</strong> {{ latest_prediction.bmi }}</p>
+            <p><strong>Probability:</strong> {{ (latest_prediction.probability * 100)|round(2) }}%</p>
+            <p><strong>Prediction:</strong> {% if latest_prediction.prediction == 1 %} High Risk {% else %} Low Risk {% endif %}</p>
+            <p><strong>Recommendations:</strong> {{ latest_prediction.recommendations }}</p>
+        {% endif %}
+    </div>
+    <hr>
+    <div class="predictions">
+        <button onclick="window.location.href='/predictions_page'" class="btn">View Past Predictions</button>
+    </div>
+    </div>
+    <script>
+    document.getElementById('predictForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const data = {
+            features: [
+                parseFloat(document.getElementById('pregnancies').value),
+                parseFloat(document.getElementById('glucose').value),
+                parseFloat(document.getElementById('bloodPressure').value),
+                parseFloat(document.getElementById('skinThickness').value),
+                parseFloat(document.getElementById('insulin').value),
+                parseFloat(document.getElementById('bmi').value),
+                parseFloat(document.getElementById('dpf').value),
+                parseFloat(document.getElementById('age').value)
+            ]
+        };
+        fetch('/predict', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(result => {
+            alert('Prediction: ' + result.prediction + ' (Probability: ' + (result.probability * 100).toFixed(2) + '%)');
+            location.reload();
+        })
+        .catch(error => console.error('Error:', error));
+    });
+    </script>
+<button>Logout<a href="/logout"></a></button>
+</body>
+</html>

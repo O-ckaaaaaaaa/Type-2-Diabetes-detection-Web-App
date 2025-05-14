@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Past Predictions</title>
+</head>
+<style>
+    :root {
+        --primary-color: #4285F4;
+        --secondary-color: #34A853;
+        --danger-color: #EA4335;
+        --warning-color: #FBBC05;
+        --light-gray: #f5f7fa;
+        --dark-gray: #2d3748;
+        --medium-gray: #718096;
+        --border-color: #e2e8f0;
+    }
+
+    body {
+        font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+        margin: 0;
+        padding: 2rem;
+        background-color: #f8fafc;
+        color: var(--dark-gray);
+        line-height: 1.6;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    h1 {
+        color: var(--primary-color);
+        margin-bottom: 1.5rem;
+        font-weight: 600;
+        font-size: 1.8rem;
+    }
+
+    h2 {
+        color: var(--dark-gray);
+        font-size: 1.5rem;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+        font-weight: 500;
+    }
+
+    .no-data {
+        color: var(--medium-gray);
+        font-style: italic;
+        padding: 1rem;
+        text-align: center;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1.5rem 0;
+        font-size: 0.9rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    th {
+        background-color: var(--primary-color);
+        color: white;
+        padding: 0.75rem 1rem;
+        text-align: left;
+        font-weight: 500;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        letter-spacing: 0.05em;
+    }
+
+    td {
+        padding: 0.75rem 1rem;
+        border-bottom: 1px solid var(--border-color);
+        vertical-align: top;
+    }
+
+    tr:nth-child(even) {
+        background-color: var(--light-gray);
+    }
+
+    tr:hover {
+        background-color: #f0f7ff;
+    }
+
+    .high-risk {
+        color: var(--danger-color);
+        font-weight: 500;
+    }
+
+    .low-risk {
+        color: var(--secondary-color);
+        font-weight: 500;
+    }
+
+    .probability {
+        font-weight: 600;
+    }
+
+    .btn-group {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+        flex-wrap: wrap;
+    }
+
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        border: none;
+    }
+
+    .btn-primary {
+        background-color: var(--primary-color);
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background-color: #3367d6;
+        transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+        background-color: white;
+        color: var(--primary-color);
+        border: 1px solid var(--primary-color);
+    }
+
+    .btn-secondary:hover {
+        background-color: #f0f7ff;
+    }
+
+    .btn-danger {
+        background-color: var(--danger-color);
+        color: white;
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
+    }
+
+    .btn-danger:hover {
+        background-color: #d33426;
+    }
+
+    .chart-container {
+        margin-top: 2rem;
+        background: white;
+        padding: 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .chart-container img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+        margin: 0 auto;
+    }
+
+    .logout-btn {
+        display: block;
+        margin-top: 2rem;
+        text-align: center;
+        color: var(--medium-gray);
+        text-decoration: none;
+        font-size: 0.9rem;
+    }
+
+    .logout-btn:hover {
+        color: var(--danger-color);
+        text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+        body {
+            padding: 1rem;
+        }
+
+        .container {
+            padding: 1rem;
+        }
+
+        table {
+            display: block;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        .btn-group {
+            flex-direction: column;
+        }
+
+        .btn {
+            width: 100%;
+        }
+    }
+</style>
+<body>
+<div class="container">
+    <h1>Past Predictions</h1>
+
+    {% if predictions %}
+    <table border="1">
+        <tr>
+                <th>ID</th>
+                <th>Pregnancies</th>
+                <th>Glucose</th>
+                <th>Blood Pressure</th>
+                <th>Skin Thickness</th>
+                <th>Insulin</th>
+                <th>BMI</th>
+                <th>DPF</th>
+                <th>Age</th>
+                <th>Probability</th>
+                <th>Prediction</th>
+                <th>Actions</th>
+            </tr>
+        {% for p in predictions %}
+        <tr>
+                <td>{{p.id}}</td>
+                <td>{{ p.pregnancies }}</td>
+                <td>{{ p.glucose }}</td>
+                <td>{{ p.blood_pressure }}</td>
+                <td>{{ p.skin_thickness }}</td>
+                <td>{{ p.insulin }}</td>
+                <td>{{ p.bmi }}</td>
+                <td>{{ p.dpf }}</td>
+            <td>{{ p.age }}</td>
+            <td>{{ (p.probability * 100)|round(2) }}%</td>
+            <td>{% if p.prediction == 1 %} High Risk {% else %} Low Risk {% endif %}</td>
+            <td>
+                <form action="{{ url_for('delete_prediction', prediction_id=p.id) }}" method="POST" style="display:inline;">
+                    <button type="submit" class="delete-btn" onclick="return confirmDelete()">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <p>No past predictions available.</p>
+    {% endif %}
+
+    <hr>
+    <button onclick="window.location.href='/index'" class="btn">Back to Home</button>
+    <button onclick="window.location.href='/download_report'">Download Report as PDF</button>
+<hr>
+
+    <h2>Diabetes Risk Visualization</h2>
+<img src="{{ url_for('generate_graphs') }}" alt="Diabetes Risk Chart">
+
+</div>
+    <script>
+    function deletePrediction(id) {
+        fetch('/delete_prediction/' + id, { method: 'POST' })
+        .then(() => location.reload())
+        .catch(error => console.error('Error:', error));
+    }
+    </script>
+<script>
+    function confirmDelete() {
+        return confirm("Are you sure you want to delete this prediction?");
+        }
+</script>
+ <button class="btn">Logout<a href="/logout"></a></button>
+</body>
+</html>
